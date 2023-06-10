@@ -8,7 +8,6 @@ import pymongo
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
-from scrapy.dupefilters import RFPDupeFilter
 
 
 class ToutiaoPipeline:
@@ -21,6 +20,7 @@ class ToutiaoPipeline:
 
 class MongoPipeline:
     collection_name = 'toutiao'
+
     # TODO 增加去重功能 可以使用scrapy自带的RFPDupeFilter或者是布隆过滤器，数据量小的情况下也可以直接使用set
 
     def __init__(self, mongo_uri, mongo_db):
@@ -37,7 +37,7 @@ class MongoPipeline:
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
         # 将已经保存的url地址加载进set中
-        urls = self.db[self.collection_name].find({},{"url":1, "_id":0})
+        urls = self.db[self.collection_name].find({}, {"url": 1, "_id": 0})
         for url in urls:
             self.urls_seen.add(url.get('url'))
 
@@ -52,4 +52,3 @@ class MongoPipeline:
             self.urls_seen.add(adapter['url'])
             self.db[self.collection_name].insert_one(adapter.asdict())
             return item
-

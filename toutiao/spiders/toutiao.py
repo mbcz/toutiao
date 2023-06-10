@@ -22,7 +22,7 @@ class ToutiaoSpider(scrapy.Spider):
     def __init__(self, *args, **kwargs):
         super().__init__()
         self.options = Options()
-        # self.options.add_argument('--headless')
+        self.options.add_argument('--headless')
         self.driver = webdriver.Chrome(options=self.options)
 
     def start_requests(self):
@@ -37,8 +37,8 @@ class ToutiaoSpider(scrapy.Spider):
             for article_url in self.get_article_url(text):
                 yield Request(article_url, callback=self.parse)
         self.driver.close()
-
     def get_article_url(self, text):
+
         """
 
         :param text:
@@ -52,7 +52,7 @@ class ToutiaoSpider(scrapy.Spider):
 
     def parse(self, response: HtmlResponse, **kwargs):
         """
-        TODO 增加不同类型的文章的解析
+        TODO 增加不同类型的文章的解析, 以及部分文章的发布时间存在问题
         解析详情
         :param response:
         :return:

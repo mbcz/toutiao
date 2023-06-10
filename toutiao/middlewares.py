@@ -5,11 +5,9 @@
 import time
 
 from scrapy import signals
-
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
-from selenium import webdriver
 from scrapy.http import HtmlResponse
+# useful for handling different item types with a single interface
+from selenium import webdriver
 
 
 class ToutiaoSpiderMiddleware:
@@ -61,16 +59,13 @@ class ToutiaoSpiderMiddleware:
         spider.logger.info("Spider opened: %s" % spider.name)
 
 
-
 class SeleniumDownloaderMiddleware:
     # 增加selenium处理 渲染页面
 
     def process_request(self, request, spider):
         spider.driver.get(request.url)
         time.sleep(3)
-        print(f'当前访问页面:{request.url}')
         return HtmlResponse(url=spider.driver.current_url, body=spider.driver.page_source, encoding='utf-8')
-
 
 
 class ToutiaoDownloaderMiddleware:
